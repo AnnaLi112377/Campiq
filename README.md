@@ -1,20 +1,12 @@
-# Campiq
+# Campiq Improved MVP
 
-A deployable beta website for Campiq, a student community and campus information platform.
+This is the improved deployable Campiq MVP.
 
-## Run locally
+Changes:
+- Removed the empty JSX comment in the header.
+- Added a mobile hamburger menu.
+- Fixed the duplicate roommate id issue.
+- Added basic demo form state for Join and Report flows.
+- Kept the original Campiq MVP visual structure and bilingual content.
 
-```bash
-npm install
-npm run dev
-```
-
-## Build
-
-```bash
-npm run build
-```
-
-## Deploy
-
-Upload this project to GitHub, then import it into Vercel.
+Deploy with Vercel.
