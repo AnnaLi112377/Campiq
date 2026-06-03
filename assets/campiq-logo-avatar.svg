@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Campiq logo avatar</title>
+  <desc id="desc">Campiq app logo adapted as a square social media profile image.</desc>
+  <defs>
+    <linearGradient id="campiq-bg" x1="198" y1="144" x2="882" y2="936" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="0.48" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#ea580c"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#9a3412" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="1080" height="1080" rx="245" fill="url(#campiq-bg)"/>
+  <circle cx="540" cy="540" r="376" fill="#fff7ed" filter="url(#soft-shadow)"/>
+  <circle cx="540" cy="419" r="105" fill="#f97316"/>
+  <circle cx="389" cy="585" r="91" fill="#f59e0b"/>
+  <circle cx="691" cy="585" r="91" fill="#ea580c"/>
+  <path d="M313 660c119 135 335 181 454 0" fill="none" stroke="#ea580c" stroke-width="74" stroke-linecap="round"/>
+  <path d="M419 678c73 59 169 74 242 0" fill="none" stroke="#fed7aa" stroke-width="58" stroke-linecap="round"/>
+</svg>

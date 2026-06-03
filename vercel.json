@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.joincampiq.com"
+        }
+      ],
+      "destination": "https://joincampiq.com/$1",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!sitemap.xml|robots.txt|assets/.*|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

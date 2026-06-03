@@ -5,3 +5,11 @@ dist/
 .vercel/
 .vercel-*/
 *.log
+
+.vercel
+supabase/.temp/
+github-upload/
+github-upload-current/
+github-upload-current-*/
+github-upload-ready-*/
+*.zip

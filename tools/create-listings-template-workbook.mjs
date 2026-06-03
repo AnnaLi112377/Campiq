@@ -1,0 +1,81 @@
+import fs from "node:fs/promises";
+import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
+
+const outputPath = "D:/ME/Campiq/campiq-improved/supabase/Campiq-listings-collection-template.xlsx";
+
+const guideRows = [
+  ["数据库字段", "中文收集项", "是否建议收集", "填写方式", "示例", "备注"],
+  ["title", "房源标题", "必填", "一句话写清楚房源", "IV El Embarcadero Summer Female Spot Sublease", "网站卡片和详情页标题"],
+  ["listing_type", "房源类型", "必填", "Studio/整套/单间/床位/合住房间等", "Shared Double (Bed Space)", "尽量统一写法"],
+  ["post_mode", "发布类型", "系统字段", "出租/转租统一填 offer", "offer", "求租才用 seek"],
+  ["name", "发布者名字", "建议填", "对方愿意公开的名字或昵称", "Nicole Saavedra", "没有就留空"],
+  ["area", "地区/小区", "必填", "Isla Vista/Goleta/小区名", "Isla Vista / The Loop", "用于筛选和展示"],
+  ["address", "具体地址", "建议填", "完整地址或小区地址", "1000 El Embarcadero Rd", "不方便公开可只写小区/街区"],
+  ["location", "展示位置", "建议填", "一般和 address 一样", "1000 El Embarcadero Rd", "网站兼容用字段"],
+  ["lease_type", "租期类型", "必填", "shortTerm 或 longTerm", "shortTerm", "暑期转租/短租填 shortTerm；长租填 longTerm"],
+  ["bedrooms", "几室", "建议填", "只填数字", "2", "未知可留空"],
+  ["bathrooms", "几卫", "建议填", "只填数字", "1.5", "未知可留空"],
+  ["room_format", "房型显示", "必填", "前台展示用的房型", "2B1B", "比如 Studio/2B2B/Shared Bedroom"],
+  ["price", "月租", "必填", "只填数字，不要加 $", "950", "如果原帖写 $950/month，这里填 950"],
+  ["min_budget", "最低预算", "求租用", "出租房源填 0", "0", "offer 房源通常不需要"],
+  ["max_budget", "最高预算", "求租用", "出租房源填 0", "0", "offer 房源通常不需要"],
+  ["move_in_date", "可入住/可租时间", "建议填", "标准日期最好；自然语言放 description", "2026-06-20", "如果导入报日期错误，就先不导入此列"],
+  ["utilities", "水电网费用", "建议填", "包/不包/部分包/未知", "All utilities included", "未知填 -"],
+  ["parking", "车位", "建议填", "有/无/收费/街边/未知", "Parking available for extra fee", "未知填 -"],
+  ["ev_charging", "充电桩", "建议填", "Yes/No/未知", "Yes", "未知填 -"],
+  ["pets", "宠物", "建议填", "允许/不允许/未知", "No pets", "未知填 -"],
+  ["gender_preference", "性别要求", "建议填", "女生优先/男生优先/不限/未知", "女性优先", "未知填 -"],
+  ["nearby_bus", "近公交", "建议填", "Yes/No/文字说明/未知", "Yes", "未知填 -"],
+  ["living_room_as_bedroom", "客厅是否住人/客厅位", "建议填", "Yes/No/文字说明/未知", "No", "未知填 -"],
+  ["description", "详细描述", "强烈建议", "把家具/洗衣/押金/室友/原帖链接等都写进去", "Available dates: June-August. Furniture: furnished.", "详情页会展示"],
+  ["contact_info", "联系方式", "建议填", "JSON 格式", "{\"phone\":\"805-123-4567\",\"instagram\":\"@example\"}", "可以空着 {}"],
+  ["images", "图片链接", "可后补", "Supabase text[] 格式或由脚本自动写入", "{\"https://.../1.jpg\",\"https://.../2.jpg\"}", "本地批量上传脚本会自动更新"],
+  ["tags", "标签", "可选", "Supabase text[] 格式", "{\"Housing\",\"UCSB\",\"Sublease\"}", "可用于搜索"],
+  ["verified", "是否已确认", "建议填", "true 或 false", "true", "已经允许转载/确认过填 true"],
+  ["created_by", "发布者用户ID", "系统字段", "用户自己发布才有", "", "导入旧房源留空；留空则不能私信"],
+  ["user_email", "发布者邮箱", "系统字段", "用户自己发布才有", "", "导入旧房源留空"],
+  ["updated_at", "更新时间", "系统字段", "通常不用填", "", "Supabase 自动处理"],
+];
+
+const importHeaders = [
+  "title", "listing_type", "post_mode", "name", "area", "address", "location", "lease_type",
+  "bedrooms", "bathrooms", "room_format", "price", "min_budget", "max_budget", "move_in_date",
+  "utilities", "parking", "ev_charging", "pets", "gender_preference", "nearby_bus",
+  "living_room_as_bedroom", "description", "contact_info", "images", "tags", "verified",
+  "created_by", "user_email",
+];
+
+const exampleRow = [
+  "IV example summer sublease", "Shared Double (Bed Space)", "offer", "Example Name", "Isla Vista",
+  "Example address", "Example address", "shortTerm", 2, 1, "2B1B", 950, 0, 0, "2026-06-20",
+  "All utilities included", "-", "-", "-", "Female preferred", "Yes", "No",
+  "Available dates: June-August. Furniture: furnished. Laundry: shared laundry. Source: paste original post link here.",
+  "{\"instagram\":\"@example\"}", "{}", "{\"Housing\",\"UCSB\",\"Sublease\"}", true, "", "",
+];
+
+const workbook = Workbook.create();
+const guide = workbook.worksheets.add("字段说明");
+guide.getRangeByIndexes(0, 0, guideRows.length, guideRows[0].length).values = guideRows;
+guide.getRange("A1:F1").format.font.bold = true;
+guide.getRange("A1:F1").format.fill.color = "#FFF7ED";
+guide.getRange("A:F").format.wrapText = true;
+guide.getRange("A:A").format.columnWidthPx = 170;
+guide.getRange("B:B").format.columnWidthPx = 170;
+guide.getRange("C:C").format.columnWidthPx = 110;
+guide.getRange("D:D").format.columnWidthPx = 260;
+guide.getRange("E:E").format.columnWidthPx = 260;
+guide.getRange("F:F").format.columnWidthPx = 260;
+guide.freezePanes.freezeRows(1);
+
+const importSheet = workbook.worksheets.add("导入模板");
+importSheet.getRangeByIndexes(0, 0, 2, importHeaders.length).values = [importHeaders, exampleRow];
+importSheet.getRangeByIndexes(0, 0, 1, importHeaders.length).format.font.bold = true;
+importSheet.getRangeByIndexes(0, 0, 1, importHeaders.length).format.fill.color = "#FEE2E2";
+importSheet.getRangeByIndexes(0, 0, 2, importHeaders.length).format.wrapText = true;
+importSheet.getRangeByIndexes(0, 0, 2, importHeaders.length).format.columnWidthPx = 160;
+importSheet.freezePanes.freezeRows(1);
+
+await fs.mkdir("D:/ME/Campiq/campiq-improved/supabase", { recursive: true });
+const output = await SpreadsheetFile.exportXlsx(workbook);
+await output.save(outputPath);
+console.log(outputPath);
